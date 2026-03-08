@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">News Now</string>
+    <string name="read_more">Read More</string>
+    <string name="menu_refresh">Refresh</string>
+    <string name="menu_about">About</string>
+    <string name="refreshing_news">Refreshing latest headlines...</string>
+    <string name="about_title">About News Now</string>
+    <string name="about_message">News Now demonstrates responsive Android layouts for phone and tablet, supports portrait and landscape modes, and includes WebView, BroadcastReceiver, Toolbar menu, ProgressBar, RatingBar, and CardView-based news cards.</string>
+    <string name="network_connected">Network connected</string>
+    <string name="network_disconnected">Network disconnected</string>
+</resources>
