@@ -2,6 +2,7 @@ package com.example.newsnow;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
@@ -40,6 +42,24 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
         holder.sourceTextView.setText(article.getSource());
         holder.dateTextView.setText(article.getDate());
         holder.summaryTextView.setText(article.getSummary());
+        holder.categoryTag.setText(article.getCategory());
+
+        // Set category tag color
+        int tagColor;
+        switch (article.getCategory().toUpperCase()) {
+            case "TECH":
+                tagColor = ContextCompat.getColor(context, R.color.tagTech);
+                break;
+            case "SCIENCE":
+                tagColor = ContextCompat.getColor(context, R.color.tagScience);
+                break;
+            case "FINANCE":
+                tagColor = ContextCompat.getColor(context, R.color.tagFinance);
+                break;
+            default:
+                tagColor = ContextCompat.getColor(context, R.color.accentColor);
+        }
+        holder.categoryTag.setBackgroundColor(tagColor);
 
         holder.ratingBar.setOnRatingBarChangeListener(null);
         holder.ratingBar.setRating(article.getUserRating());
@@ -73,6 +93,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
         final TextView sourceTextView;
         final TextView dateTextView;
         final TextView summaryTextView;
+        final TextView categoryTag;
         final RatingBar ratingBar;
         final MaterialButton readMoreButton;
 
@@ -82,6 +103,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
             sourceTextView = itemView.findViewById(R.id.articleSourceTextView);
             dateTextView = itemView.findViewById(R.id.articleDateTextView);
             summaryTextView = itemView.findViewById(R.id.articleSummaryTextView);
+            categoryTag = itemView.findViewById(R.id.categoryTag);
             ratingBar = itemView.findViewById(R.id.articleRatingBar);
             readMoreButton = itemView.findViewById(R.id.readMoreButton);
         }

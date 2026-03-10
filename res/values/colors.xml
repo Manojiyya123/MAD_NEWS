@@ -2,12 +2,29 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="primaryColor">#0E4D92</color>
-    <color name="primaryColorDark">#0A3768</color>
-    <color name="accentColor">#FF6B35</color>
-    <color name="surfaceBackground">#F5F7FA</color>
+
+    <!-- Theme Colors -->
+    <color name="primaryColor">#1A1C2E</color>
+    <color name="primaryColorDark">#0F101A</color>
+    <color name="accentColor">#2D7FF9</color>
+    <color name="surfaceBackground">#FDF8F1</color>
     <color name="cardBackground">#FFFFFFFF</color>
-    <color name="textPrimary">#1E293B</color>
-    <color name="textSecondary">#64748B</color>
-    <color name="buttonPrimary">#0077B6</color>
+
+    <!-- Text Colors -->
+    <color name="textPrimary">#1A1C2E</color>
+    <color name="textSecondary">#6B7280</color>
+
+    <!-- Tag Colors -->
+    <color name="tagTech">#F87171</color>
+    <color name="tagScience">#22C55E</color>
+    <color name="tagFinance">#F97316</color>
+    <color name="tagWorld">#A855F7</color>
+    <color name="tagSports">#3B82F6</color>
+
+    <!-- UI Element Colors -->
+    <color name="dividerColor">#E5E7EB</color>
+    <color name="ratingStars">#FBBF24</color>
+    <color name="buttonPrimary">#2D7FF9</color>
+    <color name="bannerBackground">#1A1C2E</color>
+    <color name="bannerText">#FFFFFFFF</color>
 </resources>

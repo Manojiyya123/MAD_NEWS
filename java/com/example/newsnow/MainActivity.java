@@ -1,14 +1,17 @@
 package com.example.newsnow;
 
-import android.content.IntentFilter;
+import android.content.Context;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
+import android.net.Network;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ProgressBar;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -24,9 +27,10 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
-    private ProgressBar loadingProgressBar;
+    private LinearLayout loadingLayout;
+    private TextView networkStatusBanner;
     private NewsAdapter newsAdapter;
-    private ConnectivityReceiver connectivityReceiver;
+    private ConnectivityManager.NetworkCallback networkCallback;
     private final Handler handler = new Handler(Looper.getMainLooper());
     private final Runnable loadTask = this::bindNewsData;
 
@@ -37,8 +41,12 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+        }
 
-        loadingProgressBar = findViewById(R.id.loadingProgressBar);
+        loadingLayout = findViewById(R.id.loadingLayout);
+        networkStatusBanner = findViewById(R.id.networkStatusBanner);
         recyclerView = findViewById(R.id.newsRecyclerView);
 
         boolean isTablet = getResources().getBoolean(R.bool.isTablet);
@@ -54,23 +62,50 @@ public class MainActivity extends AppCompatActivity {
         newsAdapter = new NewsAdapter(new ArrayList<>(), this);
         recyclerView.setAdapter(newsAdapter);
 
-        connectivityReceiver = new ConnectivityReceiver();
         refreshNews();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-        registerReceiver(connectivityReceiver, intentFilter);
+        registerNetworkCallback();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        try {
-            unregisterReceiver(connectivityReceiver);
-        } catch (IllegalArgumentException ignored) {
+        unregisterNetworkCallback();
+    }
+
+    private void registerNetworkCallback() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager != null) {
+            networkCallback = new ConnectivityManager.NetworkCallback() {
+                @Override
+                public void onAvailable(@NonNull Network network) {
+                    runOnUiThread(() -> {
+                        networkStatusBanner.setText(R.string.network_connected);
+                        networkStatusBanner.setVisibility(View.VISIBLE);
+                        handler.postDelayed(() -> networkStatusBanner.setVisibility(View.GONE), 3000);
+                    });
+                }
+
+                @Override
+                public void onLost(@NonNull Network network) {
+                    runOnUiThread(() -> {
+                        networkStatusBanner.setText(R.string.network_disconnected);
+                        networkStatusBanner.setVisibility(View.VISIBLE);
+                    });
+                }
+            };
+            connectivityManager.registerDefaultNetworkCallback(networkCallback);
+        }
+    }
+
+    private void unregisterNetworkCallback() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager != null && networkCallback != null) {
+            connectivityManager.unregisterNetworkCallback(networkCallback);
         }
     }
 
@@ -81,52 +116,41 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void refreshNews() {
-        loadingProgressBar.setVisibility(ProgressBar.VISIBLE);
+        loadingLayout.setVisibility(View.VISIBLE);
         recyclerView.setVisibility(RecyclerView.INVISIBLE);
         handler.removeCallbacks(loadTask);
-        handler.postDelayed(loadTask, 900);
+        handler.postDelayed(loadTask, 1500);
     }
 
     private void bindNewsData() {
         List<NewsArticle> sampleArticles = new ArrayList<>();
 
         sampleArticles.add(new NewsArticle(
-                "Global Markets Rally as Tech Stocks Lead Gains",
-                "Financial Desk",
-                "March 5, 2026",
-                "Technology stocks climbed sharply after strong quarterly guidance from major chipmakers and cloud providers.",
-                "https://www.reuters.com/world/"));
+                "AI Breakthroughs Reshape Global Industry in 2025",
+                "Reuters",
+                "2 hrs ago",
+                "Major tech firms announce sweeping changes to their AI deployment strategies..",
+                "https://www.reuters.com/world/",
+                "TECH"));
 
         sampleArticles.add(new NewsArticle(
-                "Scientists Announce Breakthrough in Battery Efficiency",
-                "Science Daily",
-                "March 4, 2026",
-                "A new lithium-sulfur prototype could significantly increase electric vehicle range while reducing charging time.",
-                "https://www.nature.com/news/"));
+                "New Climate Report Signals Critical Decade for Action",
+                "BBC News",
+                "4 hrs ago",
+                "Scientists warn that this decade will define the trajectory of global warming..",
+                "https://www.bbc.com/news",
+                "SCIENCE"));
 
         sampleArticles.add(new NewsArticle(
-                "City Transit Expands with New Electric Bus Network",
-                "Metro Updates",
-                "March 3, 2026",
-                "The city introduced 120 electric buses and smart route scheduling to reduce emissions and improve commute reliability.",
-                "https://www.bbc.com/news"));
-
-        sampleArticles.add(new NewsArticle(
-                "Championship Preview: Key Players to Watch This Weekend",
-                "Sports Hub",
-                "March 2, 2026",
-                "Analysts break down tactical matchups and the players likely to influence the season-defining clash.",
-                "https://www.espn.com/"));
-
-        sampleArticles.add(new NewsArticle(
-                "Health Officials Launch New Preventive Care Initiative",
-                "Public Health Review",
-                "March 1, 2026",
-                "Clinics across the region are offering free screenings as part of a broader preventive health campaign.",
-                "https://www.who.int/news"));
+                "Global Markets Adjust to New Economic Realities",
+                "Financial Times",
+                "6 hrs ago",
+                "Investors weigh the impact of shifting interest rates and emerging market trends..",
+                "https://www.ft.com/",
+                "FINANCE"));
 
         newsAdapter.updateData(sampleArticles);
-        loadingProgressBar.setVisibility(ProgressBar.GONE);
+        loadingLayout.setVisibility(View.GONE);
         recyclerView.setVisibility(RecyclerView.VISIBLE);
     }
 
@@ -142,12 +166,21 @@ public class MainActivity extends AppCompatActivity {
 
         if (itemId == R.id.action_refresh) {
             refreshNews();
-            Toast.makeText(this, R.string.refreshing_news, Toast.LENGTH_SHORT).show();
             return true;
         }
 
         if (itemId == R.id.action_about) {
             showAboutDialog();
+            return true;
+        }
+
+        if (itemId == R.id.action_notifications) {
+            Toast.makeText(this, "Notifications clicked", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+
+        if (itemId == R.id.action_settings) {
+            Toast.makeText(this, "Settings clicked", Toast.LENGTH_SHORT).show();
             return true;
         }
 

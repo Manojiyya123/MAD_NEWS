@@ -1,11 +1,29 @@
 <resources>
-    <string name="app_name">News Now</string>
-    <string name="read_more">Read More</string>
+    <string name="app_name">m@D_N3w$</string>
+    <string name="read_more">Read More &#8594;</string>
+    <string name="open_full_article">Open Full Article &#8594;</string>
     <string name="menu_refresh">Refresh</string>
     <string name="menu_about">About</string>
-    <string name="refreshing_news">Refreshing latest headlines...</string>
-    <string name="about_title">About News Now</string>
-    <string name="about_message">News Now demonstrates responsive Android layouts for phone and tablet, supports portrait and landscape modes, and includes WebView, BroadcastReceiver, Toolbar menu, ProgressBar, RatingBar, and CardView-based news cards.</string>
+    <string name="menu_search">Search</string>
+    <string name="fetching_news">Fetching latest news..</string>
+    <string name="about_title">About MAD_NEWS</string>
+    <string name="about_message">MAD_NEWS demonstrates responsive Android layouts for phone and tablet, supporting portrait and landscape modes with WebView, BroadcastReceiver, Toolbar, ProgressBar, RatingBar, and CardView.</string>
     <string name="network_connected">Network connected</string>
-    <string name="network_disconnected">Network disconnected</string>
+    <string name="network_disconnected">No internet</string>
+
+    <string name="cat_all">All News</string>
+    <string name="cat_tech">Technology</string>
+    <string name="cat_science">Science</string>
+    <string name="cat_finance">Finance</string>
+    <string name="cat_sports">Sports</string>
+    <string name="cat_world">World</string>
+
+    <string name="tag_tech">TECH</string>
+    <string name="tag_science">SCIENCE</string>
+    <string name="tag_finance">FINANCE</string>
+    <string name="tag_world">WORLD</string>
+    <string name="tag_sports">SPORTS</string>
+
+    <string name="rate_article">Rate this article</string>
+    <string name="featured_image">[Featured Image]</string>
 </resources>
